@@ -39,7 +39,7 @@
 │        │                                                        │
 │        └──────────────────┬────────────────────────             │
 │                           ↓                                      │
-│                    [ Agent Loop 注入点 ]                         │
+│                    [ Agent Loop 注入点 ]                         │ni
 │                    before_agent_start  → prependContext         │
 │                    system prompt digest → Wiki Snapshot         │
 │                    memory_search tool  → 按需调用               │
