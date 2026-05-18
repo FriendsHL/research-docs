@@ -1622,3 +1622,48 @@ SkillForge 当前 memory(已交付):
 4. **§5 Open Questions 清单清空 13 项** — 24 小时密集 ingest 后,backlog §1 P0 几乎全消化,只剩 aider / openhands / openai-agents-sdk 3 个未收
 
 **takeaway**:**24 小时密集 ship 已经让 overview 严重过时,Step 4 升级是把"密集 ship"沉淀成"全局判断"的关键动作**。下次 fresh session 起手就拿到 13 + 16 + 5 + 22 + 11 + 35 = 102 主页 + 10 条核心判断 + 15 条 R-XXX P0/P1,直接进入 Step 5(下一个 P0 harness)无需重读 wiki。**E3/E4 safety verify 留下次清(30-60 分钟,grep 源码)**。
+
+---
+
+## [2026-05-18] ingest | [[harness/goose]] — Step 5 用户选 P1 候选(本地已有 + Rust + MCP)
+
+**触发问题**:Step 4 overview 第 4 版完成后,backlog §1 P0 还剩 aider / openhands / openai-agents-sdk 三家,但本地都没 source。用户选 P1 候选 goose(本地已有 + Rust + MCP)。**关键想回答**:(1)goose 11 hook 是不是 Codex 8 / Claude Code 27 之间的"中间路线"标杆?(2)ACP 协议层 wiki 之前只 spec 视角,goose 是不是业内最完整实现?(3)Security 模块(adversary_inspector + egress_inspector)是不是 wiki 之前漏掉的 safety 子维度,值不值得单独成 concept?
+
+**改动**:
+- 新建 [[harness/goose]] — 13 维 + R-GOOSE-1~6 + learning_takeaway 三段(B 模式 source-grounded)
+- 新建 [[source/goose]] — 35+ file:line 锚点(Cargo / hooks / context_mgmt / security 6 文件 / acp-macros / 5 ACP provider / 5 跨家 coding agent provider / 5 内置 MCP server / AGENTS.md)
+- 更新 [[concept/hooks-design]] — **11 hook 阶梯刷新**:Codex 8 < goose 11(中等 + 4 细粒度 file/shell)< Hermes 16 < Claude Code 27;加 Open Plugins 标准对齐意义段
+- 更新 [[concept/agent-protocols]] — 加 §3.5 ACP 业内实现示范([[../harness/goose]] proc-macro + 5 ACP provider 实例)
+- 更新 [[concept/agent-runtime-stacks]] — 第 4 派 _Rust ownership + traits_ 从 Codex 1 家 → **Codex + goose 2 家**;两家定位差异 + crate 数量对照 + 工程文化对照
+- 更新 [[index]] Harness + Source 区(2 行新条目)
+- 更新 [[backlog]] §1 P1 — goose done
+
+**模式**:B 模式 source-grounded(token 紧 ~190K,精挑文件读)
+**已读源码**:
+- Cargo.toml(workspace dep)+ AGENTS.md(完整工程纪律)
+- crates/goose/src/{lib.rs ls / agents/ ls 21 文件 / context_mgmt/mod.rs head + grep / hooks/mod.rs head + grep enum / security/{mod.rs head + adversary_inspector.rs head + egress_inspector.rs head} / permission/ ls / providers/ ls 40+}
+- crates/goose-acp-macros/src/lib.rs head(295 行 proc-macro)
+- crates/goose-mcp/src/ ls(5 内置 MCP server)
+- crates/goose-sdk/ ls
+- crates/goose/src/acp/ ls
+
+**版本**:goose 1.34.0 @ 3cf0bcd(2026-05-15),Block.xyz / AAIF / Apache 2.0 / Rust
+
+**关键发现**:
+1. **业内最广 provider 兼容**(40+):15+ 标准 LLM + **5 ACP impl 业内独家**(amp/claude/codex/copilot/pi)+ **5 跨家 coding agent provider 业内独家**(claude_code/chatgpt_codex/cursor_agent/gemini_cli/kimicode) — _"用 goose 调你 Claude Code 当 backend"_ 模式 wiki 完全没见过
+2. **业内最完整 ACP 实现** — `goose-acp-macros/src/lib.rs:295` proc-macro 自动生成 `handle_custom_request` + `custom_method_schemas`;虽然 ACP 已 merge 进 A2A under Linux Foundation,goose 是 _"ACP 协议设计原本目标"_ 的最佳示范
+3. **业内罕见 security 双向防御** — `security/` 6 文件:adversary_inspector(LLM 风 BLOCK 5 类:exfiltrate/destructive/malware/privilege/untrusted remote)+ **egress_inspector**(regex domain 提取,数据出向防御)+ classification_client + scanner(PromptInjectionScanner)+ security_inspector(SecurityManager + SecurityResult is_malicious/confidence/explanation/should_ask_user/finding_id);**业内只防 prompt injection,goose 加 egress 防御是新维度**
+4. **11 hook 中间位置 + Open Plugins 标准对齐** — `hooks/mod.rs:1-2` 顶注 _"modelled after the Open Plugins hooks specification"_(open-plugins.com);7 通用 + 4 细粒度 file/shell(BeforeReadFile/AfterFileEdit/BeforeShellExecution/AfterShellExecution)介于 Codex 8 / Claude Code 27 之间;**业内多家共建标准 vs 各自独立设计**
+5. **MCP-as-extension 协议优先 dogfood** — goose-mcp 5 个内置 MCP server(autovisualiser/computercontroller/memory/peekaboo/tutorial)— 自家 framework 把内置 capability 包成 MCP server,业内罕见
+6. **`DEFAULT_COMPACTION_THRESHOLD: f64 = 0.8`** 百分比路线(vs [[harness/claude-code]] `AUTOCOMPACT_BUFFER_TOKENS=13000` 绝对 token 数 + retry budget)— wiki context_mgmt 维度新对比
+7. **PostHog 加进 observability** — 跟 OTel / Wide Events 2.0 互补的 product-level event analytics,wiki 之前 trace 路线没见过
+
+**SkillForge 启示** R-GOOSE-1~6:
+- 🔴 P1 R-GOOSE-2 Security 双向防御(adversary + egress)— SkillForge prompt injection 防御现状待 verify,goose 6 文件 + LLM-judged + 配置化规则是参考模板,2-3 周可起步
+- 🟡 P2 R-GOOSE-1 MCP-as-extension 模式 — SkillForge `Skill` / `Tool` 抽象可考虑包 MCP 暴露
+- 🟡 P2 R-GOOSE-3 加 4 个细粒度 file/shell hook + PostToolUseFailure(SkillForge 当前 ~6 hook → 11 hook)
+- 🟡 P2 R-GOOSE-6 Open Plugins 标准对齐(立刻获得跨 framework plugin 复用生态收益)
+- 🟢 P3 R-GOOSE-4 ACP proc-macro(SkillForge 协议优先级 P2 见 [[overview]] §2 判断 10,ACP 不急)
+- 🟢 P3 R-GOOSE-5 跨家 coding agent provider(商业策略而非工程问题)
+
+**takeaway**:goose 是 wiki 第 14 个 harness + 第 2 个 Rust runtime + 业内 provider 兼容性 / ACP 实现 / security 双向防御 三个维度的 anchor。**最高 ROI 是 R-GOOSE-2 Security 双向防御** — SkillForge 当前 SafetyHook 单 hook 路线 vs goose 6 文件 inspector pipeline 是清晰的工程化升级方向。**24 小时累计 8 个 P0+P1 done**(sandbox-isolation / agent-protocols / mcp-spec-deep / google-a2a-spec / smolagents / openhuman / langgraph / goose)。Token ~210K 接近硬上限,下次 fresh session 起手 102+1 = 103 主页 + 10 条核心判断 + 15+ R-XXX P0/P1。

@@ -59,14 +59,24 @@ related_harnesses: [hermes-agent, claude-code, openclaw, codex, opencode]
 - **劣势**:pi-sdk 嵌入耦合度高,升级 SDK 痛苦
 - **代表工程文化**:Mario / badlogic(20+ 年 game dev 经验,工程稳健)
 
-### 4. Rust ownership + traits 派(Codex)
+### 4. Rust ownership + traits 派(Codex + goose 两家,2026-05-18 新加 goose)
 
-- **风格**:Rust 17 + Cargo workspace 100+ crate + traits + 函数组合
-- **错误处理**:`Result<T, E>` + `?` operator + `thiserror` enum + 强类型 Domain Error
-- **典型代码**:`SessionSource::SubAgent(ThreadSpawn{depth})` enum 表达 depth chain
-- **优势**:**4 家工程化最深**(100+ crates 极细拆分,每个 provider/sandbox 独立 crate),性能最高
+- **风格**:Rust 17 + Cargo workspace + traits + 函数组合
+- **错误处理**:`Result<T, E>` + `?` operator + `thiserror` / `anyhow` + 强类型 Domain Error
+- **两家典型代码对照**:
+  - **Codex**:`SessionSource::SubAgent(ThreadSpawn{depth})` enum 表达 depth chain(actor model)
+  - **goose**:`tokio_util::sync::CancellationToken` 贯穿 agent reply + `Provider trait` 40+ impl(协议优先)
+- **两家定位差异**:
+  - **Codex** 偏 _coding agent + V8 isolate code-mode_(详见 [[../deep/codex-code-mode-v8-isolate]])
+  - **goose** 偏 _跨 backend 兼容 + 协议优先_(MCP-as-extension + ACP proc-macro + 40+ provider 含 5 跨家 coding agent backend)
+- **两家 crate 数量对照**:
+  - Codex:100+ crate 极细拆分(每个 provider/sandbox 独立 crate)
+  - **goose**:8 crate workspace 中等粒度(goose / goose-acp-macros / goose-cli / goose-server / goose-mcp / goose-sdk / goose-test / goose-test-support)
+- **优势**:工程化最深,性能最高
 - **劣势**:Rust 学习曲线陡,LLM training data 比 TS / Python 少
-- **代表工程文化**:OpenAI(`AGENTS.md:65-75` "resist adding code to codex-core",反 god crate;模块上限 500 LoC,超 800 LoC 强制拆)
+- **代表工程文化**:
+  - **OpenAI Codex**(`AGENTS.md:65-75` "resist adding code to codex-core",反 god crate;模块上限 500 LoC,超 800 LoC 强制拆)
+  - **Block goose**(`AGENTS.md` "Use anyhow::Result";"Don't add error context that doesn't add useful information";"Don't make things optional that don't need to be — the compiler will enforce";"Avoid overly defensive code - trust Rust's type system" — Rust _最小化代码_ 哲学)
 
 ### 5. Effect-TS functional + Schema-first 派(opencode)
 

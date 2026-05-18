@@ -221,7 +221,7 @@ safety: |
 - [x] Step 4:升级 `[[overview]]` — ✅ **2026-05-18 完成**(第 4 版升级到 13 harness + 16 eval + 5 framework + 22 concept + 11 deep + 35 source = 102 主页;§2 判断 7 → **10 条**(加判断 8 paradigm 4 种 + 判断 9 deep 页 + 判断 10 5 层协议栈);§3 加 R-XXX P0/P1 15 条联动;§5 清空已完成项;§6 元判断扩到 4 维)
 - [x] **E1 + E2 bundled**:✅ index 加 2 行 + schema 加 §3.2b framework 类型 + 5 个 eval 改 `type: framework` + lint 规则 §8 同步
 - [ ] **E3/E4 — agentscope + metagpt safety verify**:⏳ 留待下次(30-60 分钟,grep 源码补全)
-- [ ] Step 5:下一个 P0 harness(aider / openhands / openai-agents-sdk 三选一)
+- [x] **Step 5**:✅ **2026-05-18 完成** — 用户选 P1 候选 [[harness/goose]] ingest(Rust + MCP 路线;3 个 P0 候选 aider / openhands / openai-agents-sdk 本地都没 source 待 clone)+ 3 处反向加链(hooks-design 11 hook 阶梯 / agent-protocols ACP 实现示范 §3.5 / agent-runtime-stacks 第 4 派 Rust 从 Codex 1 家 → goose+Codex 2 家)
 
 ### 长期 health
 

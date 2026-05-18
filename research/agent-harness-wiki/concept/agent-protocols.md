@@ -171,6 +171,20 @@ sources:
 - **特点**:MIME type + 同步/异步/streaming + offline discovery via 嵌入式 metadata
 - **意义**:ACP → A2A 合并是 _"标准联盟健康"_ 信号,避免协议碎片化;**Linux Foundation 扮演 _"协议聚合 hub"_**
 
+### 3.5 ACP 业内实现示范:[[../harness/goose]](2026-05-18 新加)
+
+虽然 ACP 已 merge 进 A2A,但 ACP 协议本身的实现样本依然有借鉴价值。**[[../harness/goose]] 是业内 ACP 实现最完整的样本**:
+
+| 维度 | goose 实现 |
+|---|---|
+| **依赖** | `Cargo.toml:27-28` workspace dep `agent-client-protocol = "0.11"` + `agent-client-protocol-schema = "0.12"` |
+| **proc-macro 自动生成** | `goose-acp-macros/src/lib.rs:295` — `#[custom_methods]` 注解 impl 块,自动生成:(1) `handle_custom_request` dispatcher(自动 method match + JSON params 反序列化)(2) `custom_method_schemas` JSON Schema 自动生成(via `schemars::JsonSchema`)|
+| **5 ACP provider 实例** | `crates/goose/src/providers/`:`amp_acp.rs` / `claude_acp.rs` / `codex_acp.rs` / `copilot_acp.rs` / `pi_acp.rs` + `acp_tooling.rs` |
+| **ACP server 子模块** | `crates/goose/src/acp/`:server / transport / templates / adapters / fs / mcp_app_proxy 等 |
+| **意义** | ACP 协议虽合并进 A2A,goose proc-macro + 5 impl 是 _"ACP 协议设计原本目标"_(provider-side ACP 自动化)的最佳示范 |
+
+**SkillForge 启示**:若 SkillForge 走 ACP 协议(本 wiki §10 判 P2,见 [[../overview]] §2 判断 10),goose-acp-macros 是参考实现。当前 SkillForge 推 MCP/OTel 优先,ACP 不急。
+
 ---
 
 ## 4. AGNTCY — Internet of Agents(编排/网格层)

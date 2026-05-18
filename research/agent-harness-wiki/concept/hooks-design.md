@@ -19,12 +19,23 @@ related_harnesses: [codex, claude-code, hermes-agent, openclaw]
 
 ## 设计空间(6 维)
 
-### 1. 数量与粒度
+### 1. 数量与粒度(2026-05-18 加 [[../harness/goose]] 后 4 档阶梯)
+
 - **极简**(Codex):**8 lifecycle 事件**(`hooks/src/lib.rs:18-27`)
+- **中等 + 4 细粒度 file/shell**([[../harness/goose]]):**11 hooks**(`crates/goose/src/hooks/mod.rs:49-77`)— ⭐ Open Plugins 标准对齐(`mod.rs:1-2` 顶注 _"modelled after the Open Plugins hooks specification"_, open-plugins.com/agent-builders/components/hooks)
 - **中等**(Hermes):**16 hooks**(`VALID_HOOKS`,`hermes_cli/plugins.py:75-111`)
 - **细粒度**(Claude Code):**27 hooks zod-validated**(`entrypoints/sdk/coreTypes.ts:25-53`)
 
-差 ~3 倍。原则:**越多的 hook 越细粒度,但用户学习成本越高,plugin 互相干扰风险越大**。
+```
+Codex 8 (lifecycle)   <  goose 11 (Open Plugins)  <  Hermes 16 (Python)  <  Claude Code 27 (zod)
+   精简                       中等 + 4 细粒度 file/shell             细粒度 framework
+```
+
+**goose 11 = 7 通用 + 4 细粒度** = 7 通用(PreToolUse / PostToolUse / **PostToolUseFailure** / SessionStart / SessionEnd / UserPromptSubmit / Stop)+ 4 细粒度 file/shell(**BeforeReadFile / AfterFileEdit / BeforeShellExecution / AfterShellExecution**)— 业内独家在 _读文件 / 改文件 / 执行 shell_ 这三个 _高风险动作_ 上前后包夹,适合 security inspector(`adversary_inspector` + `egress_inspector`)介入。
+
+**Open Plugins 标准对齐意义**:goose hook 跟业界标准共建,比 Claude Code/Codex/Hermes 各自独立设计强 — _跨 framework plugin 复用_ 是新维度。SkillForge 若对齐,立刻获得生态收益。
+
+差 ~3 倍(8 → 27)。原则:**越多的 hook 越细粒度,但用户学习成本越高,plugin 互相干扰风险越大**。
 
 ### 2. 是否区分 dispatch matcher
 - **Codex**:8 个事件里只有 6 个 `HOOK_EVENT_NAMES_WITH_MATCHERS`(`hooks/src/lib.rs:34-41`),`Stop` 跟 `UserPromptSubmit` 不需要 matcher 因为没有 tool name / compaction trigger / session source 可匹配 — **显式区分,精确**

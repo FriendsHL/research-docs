@@ -109,7 +109,7 @@ updated: 2026-05-17
 |---|---|---|---|---|
 | `cline` | harness | cline/cline,VS Code agent,TypeScript,plan/act 双 mode | github.com/cline/cline | planned |
 | `roo-code` | harness | Roo-Code(原 Roo Cline),Cline fork,multi-mode | github.com/RooCodeInc/Roo-Code | planned |
-| `goose` | harness | Block/Square 出品,MCP 主推 + 多 provider,Rust | github.com/block/goose | planned |
+| `goose` | harness | Block/Square 出品,MCP 主推 + 多 provider,Rust | github.com/block/goose | **done(2026-05-18)** → [[harness/goose]] |
 | `continue` | harness | continuedev/continue,IDE-first 开源 Copilot 替代,TypeScript | github.com/continuedev/continue | planned |
 | `crush` | harness | charmbracelet/crush,TUI 路线,Go,跟 [[harness/opencode]] 同类 | github.com/charmbracelet/crush | planned |
 | `swe-agent` | harness | Princeton,跟 [[eval/swe-bench]] 配套但单独的 agent loop,Python | github.com/SWE-agent/SWE-agent | planned |
