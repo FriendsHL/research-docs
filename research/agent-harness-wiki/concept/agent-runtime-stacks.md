@@ -224,3 +224,38 @@ related_harnesses: [hermes-agent, claude-code, openclaw, codex, opencode]
 | 早返回 + 避 else | opencode AGENTS.md | Java 代码 review 标准 |
 | `.codex` + `.cursor` symlink | opencode + Opik | 多 LLM 工具普适性 |
 | 22 国语言 README | opencode 22 国 | SkillForge 走开源后本地化 |
+
+---
+
+## 相邻视角:Agent Execution Paradigm(执行模型,正交于本页技术栈)
+
+> **本页讨论"语言 + 编程哲学"** — 把 5 harness 按 Python OOP / React TS / pi-sdk TS / Rust / Effect-TS 分流。**Agent Execution Paradigm 是另一个正交维度** — agent loop 本身的执行模型(ReAct loop / event loop / actor model / state graph)。两者可任意组合(LangGraph 用 Python OOP 实现 Pregel state graph)。
+
+### 4 种 Agent Execution Paradigm
+
+| Paradigm | 代表 harness | 核心机制 |
+|---|---|---|
+| **1. ReAct while-loop** | Hermes / Claude Code / Codex 传统模式 / opencode / SkillForge | `while tool_use { tool → observe → think }` 的同步循环,业内默认 |
+| **2. Event-driven loop** | Dify workflow / opencode Effect-TS | 事件触发驱动 node 执行,适合 visual workflow |
+| **3. Actor model + mailbox** | [[../harness/codex]] | `core/src/agent/` mailbox + control + `resume_agent` Rust actor(详见 [[../deep/codex-actor-resume-agent]]) |
+| **4. Pregel / State Graph**(新) | [[../harness/langgraph]] | `pregel/` Google graph processing + `channels/` message passing + `StateGraph` 编译/运行分离(`graph/state.py:130` Generic 4 type params + `:1391` CompiledStateGraph) |
+
+**LangGraph 是业内 _"Pregel + 类型化状态图"_ paradigm 旗手**(`Generic[StateT, ContextT, InputT, OutputT]` 4 generic type parameter,type-safe agent state machine 业内最强),跟其他 3 种 paradigm 形成对照。
+
+**为什么 Pregel 在 agent framework 上罕见**:Google Pregel 论文(2010)解决大规模图计算,**LangGraph 把它降维用到 LLM agent execution** — 节点 = LLM call,边 = state transition,channels = message passing,**编译产物 `CompiledStateGraph` 分离**让 graph 优化(并行 / 缓存 / checkpoint)成为可能。**Checkpoint 独立 package + 3 backends(memory/sqlite/postgres)+ `checkpoint-conformance` test suite** 是业内唯一 _"persistence first-class + 给 3rd-party 实现兜底测试"_ 工程姿态(详见 [[../harness/langgraph]] R-LG-1~4)。
+
+### Paradigm × 技术栈正交组合
+
+| 技术栈 \ Paradigm | ReAct loop | Event-driven | Actor model | Pregel/StateGraph |
+|---|---|---|---|---|
+| Python OOP | Hermes ✅ | — | — | **LangGraph ✅** |
+| React TS / Bun | Claude Code ✅ | — | — | — |
+| pi-sdk TS | OpenClaw ✅ | — | — | — |
+| Rust | Codex (传统) ✅ | — | **Codex (actor v2) ✅** | — |
+| Effect-TS | opencode ✅(部分 Service event) | opencode partial | — | — |
+
+**对 SkillForge 启示**(R-LG-1~4 在 [[../harness/langgraph]] 已列):
+- 🟡 P2 Checkpoint 抽 SPI + conformance test pattern(2-3 周)
+- 🟡 P2 StateGraph 4-generic typing 移植到 Java(`SubAgentRun<State, Context, Input, Output>`)
+- 🟢 P3 Pregel POC alternative paradigm(长期评估,目前 ReAct loop 足够)
+- 🟢 P3 prebuilt 双层 SDK 设计(高层 ReAct executor + 底层 graph,二合一)

@@ -163,12 +163,27 @@ opencode 是业内最简单 multi-agent 模式:
 
 - **Agent 自动生成**(`agent.ts:Service.generate()`)— 用 `ai` SDK `streamObject` 从 description 自动生成 agent `{identifier, whenToUse, systemPrompt}`
 
-**4 条路线汇总**:
+### [[../harness/openhuman]] — **Fork-style 第 2 家 verified**(2026-05-18 新加)
+
+OpenHuman Rust core 在 `src/openhuman/agent/harness/fork_context.rs` 实现 **Fork-style KV-cache reuse**,跟 Claude Code Fork 思路一致但 Rust 语言:
+
+- **`harness/fork_context.rs`** — fork 子 agent 时复用 parent 的 KV cache,child 继承 parent context
+- **`harness/definition.rs`** — `SandboxMode` + `ToolScope` enum + workspace TOML loading 控制 fork child 的 sandbox 模式 + 工具子集
+- **`harness/interrupt.rs`** — `InterruptFence` + `check_interrupt` + `InterruptedError` Rust RAII graceful cancellation,fork child 可被 parent 中断
+- **14 built-in agent archetypes**(`agent/agents/` orchestrator/planner/researcher/code_executor/critic/...)既支持隔离 spawn 也支持 fork inherit
+
+**跟 Claude Code Fork 校准**:
+- ✅ 相同:KV-cache reuse + parent context 继承 + parallel research forks 场景
+- ❌ 不同:Rust ownership 让 InterruptFence 是 RAII 强制 cleanup(对照 CC `AbortController` JS 风);`SandboxMode` enum 给 fork child 显式 sandbox 边界(CC 是 permission mode 全局态)
+
+**意义**:Fork-style 不再是 Claude Code 独家,**wiki 内第 2 家 verified 实现**(尤其 Rust 路线证明这套思路 cross-language portable)。
+
+**5 条路线汇总**:
 
 | 路线 | 代表 | 触发模式 | 跨 agent 状态 |
 |---|---|---|---|
 | 1. 完全隔离 fire-and-forget | Hermes / OpenClaw | LLM 调 `delegate_task` 工具 | 不可恢复 |
-| 2. SubAgent 隔离 + Fork 继承 | Claude Code | LLM 选模式 | Fork 共享 cache |
+| 2. SubAgent 隔离 + Fork 继承 | Claude Code · **OpenHuman**(`harness/fork_context.rs` 第 2 家 verified) | LLM 选模式 | Fork 共享 cache |
 | 3. Actor mailbox + control + resume | Codex | LLM 跨 turn 中断 + 恢复 | **可 resume** |
 | 4. Tab 切换 builtin + 工具触发跨切 + 自动生成 | **opencode** | **用户主动 Tab + LLM 调 `plan_exit` + `Question.ask` 用户确认** | plan 文件作为跨 agent 状态载体 |
 

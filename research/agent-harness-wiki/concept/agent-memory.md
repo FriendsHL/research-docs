@@ -186,7 +186,19 @@ related_evals: [mem0, letta, mempalace, langmem, zep-graphiti]
 SkillForge 路线(第 6):LLM-SYNTHESIS proposal + 人审 gate
                     + DREAM-CONSOLIDATION dedup + archive
 ──────────────────────────────────────────────────────────
+┌─────────────────────────────────────────────────────────┐
+│  [[../harness/openhuman]] 路线(第 7,2026-05-18 新加):│
+│  Memory Tree + Obsidian vault 双写(Karpathy llm-wiki)   │
+│  → 17 JSON-RPC controller(`memory/tree/schemas.rs:27-48`)│
+│  → SQLite 本地(`rusqlite "bundled"`)+ `.md` 双写         │
+│  → ≤3k token chunks + 评分 + hierarchical 折叠           │
+│  → 118+ OAuth(经 Composio)+ 20min auto-fetch loop      │
+│  → 用户可直接编辑 .md 降低 memory 黑盒信任成本           │
+│  → 详见 [[llm-wiki-pattern]] §OpenHuman Memory Tree     │
+└─────────────────────────────────────────────────────────┘
 ```
+
+**7 路线小结对照**:mem0 _"LLM 提取累加"_ / MemPalace _"verbatim hierarchical"_ / Letta _"function-call ops"_ / LangMem _"LangChain ecosystem reflection"_ / Zep+Graphiti _"temporal KG episodes"_ / SkillForge _"人审 gate proposal"_ / OpenHuman _"Karpathy llm-wiki SQLite+Obsidian 双写"_ — **OpenHuman 是 wiki 内首家把 Karpathy llm-wiki 模式直接当 agent memory 后端的 verified production**(其他 6 路线都没有这种 "memory = browsable wiki" 思路)。
 
 ## SkillForge 校准(B 模式 verified,2026-05-16)
 

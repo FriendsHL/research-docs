@@ -142,6 +142,29 @@ Workflow: `wiki_search` first, then `wiki_get` for the exact page you need.
 - 机器操作 = JSONL / JSON
 - 人工备注 = `<!-- openclaw:human:start/end -->` 块,**compile 永远不覆盖**
 
+### [[../harness/openhuman]] Memory Tree(**wiki 内第 2 家 production 实现**)
+
+`src/openhuman/memory/tree/` Rust + SQLite + Obsidian vault 双写,**Karpathy llm-wiki 模式 wiki 内 verified 第 2 家 production**(对照 OpenClaw 第 1 家完整 + 我们 hand-crafted 第 3 家简化):
+
+- **17 个 JSON-RPC controller**(`schemas.rs:27-48`):
+  - 写侧 6 个:`ingest / trigger_digest / delete_chunk / flush_now / wipe_all / reset_tree`
+  - 读侧 10 个:`list_chunks / get_chunk / list_sources / search / recall / entity_index_for / chunks_for_entity / top_entities / chunk_score / graph_export`
+  - 配置 1 个:`get_llm / set_llm`
+- **存储**:本地 SQLite(`rusqlite "bundled"` `Cargo.toml:73`)+ Obsidian-compatible vault `.md` 双写 — 用户可直接编辑 markdown,降低 memory 黑盒信任成本
+- **chunking**:≤3k token Markdown chunks + 评分 + 折叠成 hierarchical summary trees
+- **ingestion 自动化**:118+ OAuth(经 Composio)+ 20min auto-fetch loop 持续填 vault — **Karpathy 概念 + production 自动化补给**
+- **来源**:README 明示借鉴 Karpathy obsidian-wiki workflow
+
+跟 OpenClaw 对照:
+| 维度 | [[../harness/openclaw]] Memory Wiki | [[../harness/openhuman]] Memory Tree |
+|---|---|---|
+| 语言 | TypeScript | Rust(`src/openhuman/memory/tree/`) |
+| 表面 | 5 Agent tool(status/search/get/apply/lint) | **17 JSON-RPC controller** 更细粒度 |
+| Compile digest 注入 | ✅ `agent-digest.json` + 自动 system prompt 段 | ?(`flush_now` 暗示有但未 verify) |
+| 双写 markdown | ✅ vault 文件 | ✅ Obsidian-compatible vault |
+| Claim 结构化 | ✅ `claims.jsonl` | ?(`chunk_score / graph_export` 暗示但未 verify) |
+| 自动 ingest | 人工 + Dreaming | **118+ OAuth auto-fetch 20min** |
+
 ### 我们正在做的 agent-harness-wiki(本仓库)
 
 - 在 Karpathy 模式上做的 hand-crafted markdown 实现
