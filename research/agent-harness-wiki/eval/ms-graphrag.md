@@ -1,6 +1,6 @@
 ---
 name: ms-graphrag
-type: eval
+type: framework
 status: active
 language: python
 last_ingested_version: latest @ commit de531f0a

@@ -1,6 +1,6 @@
 ---
 name: llama_index
-type: eval
+type: framework
 status: active
 language: python
 last_ingested_version: llama-index-core 0.14.22

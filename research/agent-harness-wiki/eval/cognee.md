@@ -1,6 +1,6 @@
 ---
 name: cognee
-type: eval
+type: framework
 status: active
 language: python
 last_ingested_version: 1.0.9

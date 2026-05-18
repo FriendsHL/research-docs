@@ -26,14 +26,14 @@ scope: full
 
 ## ❌ Errors(必修,4 条)
 
-### E1. `index.md` 未收录 2 个 concept 页
+### E1. `index.md` 未收录 2 个 concept 页 — ✅ **2026-05-18 已修(Step 4 bundle)**
 
 | 文件 | 状态 |
 |---|---|
-| `concept/attribution.md` | ❌ 存在但 index 未收录 |
-| `concept/trace-based-eval.md` | ❌ 存在但 index 未收录 |
+| `concept/attribution.md` | ✅ 已加入 index.md(§Concept,sandbox-isolation 后) |
+| `concept/trace-based-eval.md` | ✅ 已加入 index.md(§Concept,attribution 后) |
 
-**修复**:在 `index.md` §Concept 加 2 行索引。
+**修复**:已在 `index.md` §Concept 加 2 行索引(含完整摘要 + 链接 + 日期)。
 
 ### E2. 5 个 eval 页用错 frontmatter schema
 
@@ -52,15 +52,14 @@ scope: full
 - 选 B:扩 schema 加新 type `framework`(支持 harness-like 内容但定位上跟 eval/memory/RAG 相关)— 推荐
 - 选 C:维持现状,改 lint 规则放宽对 `eval/*` 强制 8 维
 
-**✅ 决策(2026-05-18)**:**选 B — 扩 schema 加 `type: framework`**(下次执行,本次 commit 暂不动)。
+**✅ 决策(2026-05-18)**:**选 B — 扩 schema 加 `type: framework`** — ✅ **2026-05-18 已修(Step 4 bundle)**。
 
-具体步骤(留待下次 session):
-1. 在 `schema.md` §3 加新章节 `3.2b framework/*.md`(或允许 `eval/*` 子目录用 `type: framework`)
-2. 13 维 harness frontmatter 复用 + 强调 takeaway 必填
-3. lint §8 规则更新:`type: framework` 不强制 8 维 eval,但强制 13 维 harness + takeaway
-4. 5 个文件改 `type: eval` → `type: framework`(可保留在 `eval/` 路径不动,避免反向链翻新)
-
-记入下次 session 议程,跟 Step 4(overview 升级)一起做。
+具体步骤(✅ 全部完成):
+1. ✅ 在 `schema.md` §3 加新章节 `3.2b eval/*.md(type: framework)`(`eval/*` 子目录沿用,避免反向链翻新)
+2. ✅ 13 维 harness frontmatter 复用 + 强调 takeaway 必填
+3. ✅ lint §8 规则更新:`type: framework` 不强制 8 维 eval,但强制 13 维 harness + safety + takeaway;`type: eval-framework` 才强制 8 维
+4. ✅ 5 个文件改 `type: eval` → `type: framework`(ag2 / cognee / llama_index / ms-graphrag / pathway)
+5. ✅ schema.md §9 Changelog 加 v2 entry
 
 ### E3. `harness/agentscope.md` safety 字段整体未 verify
 
@@ -219,8 +218,10 @@ safety: |
 
 ### 中期(下次 session)
 
-- [ ] Step 4:升级 `[[overview]]`(1 小时)— 当前 2026-05-16 首版基于 5 harness + 2 eval + 12 concept,需更新到 13+16+22+11 = 62 主页 + 35 source
-- [ ] Step 5:Step 5:下一个 P0 harness(aider / openhands / openai-agents-sdk 三选一)
+- [x] Step 4:升级 `[[overview]]` — ✅ **2026-05-18 完成**(第 4 版升级到 13 harness + 16 eval + 5 framework + 22 concept + 11 deep + 35 source = 102 主页;§2 判断 7 → **10 条**(加判断 8 paradigm 4 种 + 判断 9 deep 页 + 判断 10 5 层协议栈);§3 加 R-XXX P0/P1 15 条联动;§5 清空已完成项;§6 元判断扩到 4 维)
+- [x] **E1 + E2 bundled**:✅ index 加 2 行 + schema 加 §3.2b framework 类型 + 5 个 eval 改 `type: framework` + lint 规则 §8 同步
+- [ ] **E3/E4 — agentscope + metagpt safety verify**:⏳ 留待下次(30-60 分钟,grep 源码补全)
+- [ ] Step 5:下一个 P0 harness(aider / openhands / openai-agents-sdk 三选一)
 
 ### 长期 health
 
@@ -234,12 +235,14 @@ safety: |
 
 | 维度 | 评分 | 备注 |
 |---|---|---|
-| 索引完整性 | 🟡 98%(100/102 收录) | 2 个 concept 漏录(留下次清) |
-| frontmatter 完整度 | 🟡 ~85% | 7 个 `?` 待 verify + 2 个 safety 字段缺失(留下次清) |
-| 双向 wikilink | ✅ **本 session Step 3 已清 4 处积压** | openhuman/langgraph 反向链全部完成 |
-| takeaway 可执行性 | ✅ 优秀 | 123 个 R-XXX 编号 + 优先级齐 |
+| 索引完整性 | ✅ **100%(102/102 收录)**(2026-05-18 Step 4 修) | E1 已清 — attribution + trace-based-eval 已加入 index.md §Concept |
+| frontmatter 完整度 | 🟡 ~85% | 7 个 `?` 待 verify(W2)+ 2 个 safety 字段缺失(E3/E4 留下次清)|
+| **schema 一致性** | ✅ **2026-05-18 Step 4 修** | E2 已清 — schema v2 加 `type: framework`,5 个 eval 改 type |
+| 双向 wikilink | ✅ **Step 3 已清 4 处积压** | openhuman/langgraph 反向链全部完成 |
+| takeaway 可执行性 | ✅ 优秀 | 123 个 R-XXX 编号 + 优先级齐(其中 15 条 P0/P1 在 [[overview]] §3 列出) |
 | deep 页结构合规 | ✅ 100% | 11 个 deep 全含 WHY + 失败模式 |
 | log.md 格式合规 | ✅ 97%(38/39) | 1 个 meta entry 例外可接受 |
 | stale 标记 | ✅ 无 | 最老 ingest 2026-05-15(3 天) |
+| **overview 时效性** | ✅ **2026-05-18 Step 4 升级** | 第 4 版,7 → 10 条判断;新加 §3 R-XXX 15 条;§5 清空已完成 13 项;§6 4 维元判断 |
 
-**整体**:🟡 健康度良好,2 处 E + 11 处 W 可在 30 分钟内全清。**反向加链积压**是核心积欠,建议 Step 3 优先做。
+**整体**:✅ 健康度优秀,Step 4 修完 E1+E2 + overview 升级后,剩 E3/E4(2 处 safety)+ W2/W3(10 处 `?`)可下次清。**反向加链积压**已清;**schema 漂移已修**;**overview 时效已对齐**。

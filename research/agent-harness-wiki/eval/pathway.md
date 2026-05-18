@@ -1,6 +1,6 @@
 ---
 name: pathway
-type: eval
+type: framework
 status: active
 language: python+rust
 last_ingested_version: dynamic

@@ -1,6 +1,6 @@
 ---
 name: ag2
-type: eval
+type: framework
 status: active
 language: python
 last_ingested_version: 0.13.0

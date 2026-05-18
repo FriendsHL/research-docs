@@ -1593,3 +1593,32 @@ SkillForge 当前 memory(已交付):
 - 🟢 P3 R-LG-4 prebuilt 双层 SDK 模式
 
 **takeaway**:LangGraph 是 wiki 协议层 + 4 个 multi-agent framework + 第 4 种 agent execution paradigm 的关键 anchor。**最高 ROI 是 R-LG-1 Checkpoint as first-class concern** — SkillForge persistence 当前是 PostgreSQL + pgvector,抽出 BaseCheckpointSaver SPI + conformance test suite 给跨产品 SDK 复用是直接借鉴。**24 小时内累计 7 个 P0 done**(sandbox-isolation / agent-protocols / mcp-spec-deep / google-a2a-spec / smolagents / openhuman / langgraph)。Token 极紧,建议下次 fresh session 继续。
+
+---
+
+## [2026-05-18] meta | Step 4 overview 升级 + E1 + E2 bundled
+
+**触发问题**:上次 session 跑 `/wiki-lint` 出 4 E + 11 W + 123 R-XXX,Step 3 清完 W1 反向加链积压后,overview 时效已严重落后(2026-05-16 第 3 版基于 5 harness + 14 eval + 13 concept,实际 13 + 21 + 22 + 11 deep),且 E1(index 漏 2 行)+ E2(5 个 eval schema 漂移)还没修。本次把 overview 升级 + E1 + E2 三件套打包。
+
+**改动**:
+- 更新 [[overview]] 第 3 → **第 4 版**(2026-05-18):
+  - §1 snapshot table 重写(13 + 16 eval + 5 framework + 22 + 11 + 35 = 102 主页)+ 调研对象覆盖度补 8 新 harness + eval 6 路线分类(加 framework)+ memory 7 路线(加 openhuman)+ RAG 6 路线新表
+  - §2 判断 7 条 → **10 条**(判断 1 multi-agent 4 → 5 路线;新加判断 8 paradigm 4 种 / 判断 9 deep 页 §WHY + §失败模式 / 判断 10 协议层 5 栈)
+  - §3 加 R-XXX P0/P1 15 条 lint-report 联动表
+  - §5 Open Questions 清空 13 项已完成,加 aider/openhands/openai-agents-sdk 3 个 P0 候选
+  - §6 元判断 3 条 → **6 条**(加 deep 页类型 / 24 小时 reshape 7 个 concept / 123 R-XXX 是 SkillForge 决策具象化)
+- E1 修复:[[index]] §Concept 加 [[concept/attribution]] + [[concept/trace-based-eval]] 2 行(102/102 收录)
+- E2 修复:[[schema]] §3 加 §3.2b `type: framework`(13 维 harness 复用 + 不强制 8 维 eval)+ §8 lint 规则同步 + §9 Changelog v2;5 个 eval 文件改 `type: eval` → `type: framework`(ag2 / cognee / llama_index / ms-graphrag / pathway)
+- 更新 [[lint-report-2026-05-18]] 标 E1/E2/Step 4 done + 健康度表(索引完整性 🟡 98% → ✅ 100%;新加 schema 一致性 + overview 时效性 两行)
+
+**模式**:meta(不算新 ingest),纯 wiki 维护性 commit
+**已读源码**:0(纯文档操作)
+**版本**:N/A
+
+**关键发现**:
+1. **schema v2 决策(选 B)解决"eval/ 内 5 个 framework 误标"语义错配** — 避免反向链翻新,但精确区分 eval-framework vs framework(memory/RAG/multi-agent/streaming)
+2. **overview §2 判断 9 deep 页 §WHY + §失败模式** — 把 deep 页"为什么贵"的元判断显化,SkillForge 内部文档可学这个结构
+3. **§3 R-XXX 联动表** — 把 8 条 overview 综合决策跟 15 条 page-level R-XXX 区分清楚,前者是 thesis,后者是 actionable
+4. **§5 Open Questions 清单清空 13 项** — 24 小时密集 ingest 后,backlog §1 P0 几乎全消化,只剩 aider / openhands / openai-agents-sdk 3 个未收
+
+**takeaway**:**24 小时密集 ship 已经让 overview 严重过时,Step 4 升级是把"密集 ship"沉淀成"全局判断"的关键动作**。下次 fresh session 起手就拿到 13 + 16 + 5 + 22 + 11 + 35 = 102 主页 + 10 条核心判断 + 15 条 R-XXX P0/P1,直接进入 Step 5(下一个 P0 harness)无需重读 wiki。**E3/E4 safety verify 留下次清(30-60 分钟,grep 源码)**。

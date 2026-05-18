@@ -215,6 +215,53 @@ skillforge_takeaway: |
 ---
 ```
 
+### 3.2b eval/*.md(`type: framework`)— 框架页(2026-05-18 新增)
+
+放在 `eval/` 路径下,但实际是 memory / RAG / multi-agent / streaming framework,**不是 eval framework**。这类页面用 **13 维 harness frontmatter**(复用 §3.1),只是 `type` 字段标 `framework` 而非 `eval-framework`。
+
+```yaml
+---
+type: framework                    # ⚠️ 区别于 eval-framework
+name: <name>                       # ag2, cognee, llama_index, ms-graphrag, pathway, ...
+status: <active|deprecated>
+sources: [...]
+
+# === 13 维 harness frontmatter(复用 §3.1)===
+agent_loop: |
+tool_protocol: |
+context_mgmt: |
+memory: |
+multi_agent: |
+eval_loop: |
+self_evolution: |
+observability: |
+hooks: |
+safety: |
+provider: |
+channels: |
+persistence: |
+cancellation: |
+
+skillforge_takeaway: |
+  - 可借鉴: ...
+  - 风险 / 待决策 / SkillForge 已领先 ...
+
+learning_takeaway: |
+  - differentiator / strengths / what_done_well
+---
+```
+
+**为什么不挪到 `harness/`**:
+1. 这些 framework 是 memory/RAG/streaming 配套设施,非 agent 主驱动 runtime
+2. 调研路线上跟 eval framework 一起 ingest(ag2 / cognee / llama_index 跟 mem0 / letta 同批)
+3. 挪到 harness/ 会引发 30+ 反向链翻新
+
+**lint 规则放宽**:`type: framework` 不强制 8 维 eval-specific(target/dataset/scorer/...),但**强制 13 维 harness + safety + takeaway**(沿用 §3.1 规则)。
+
+**现有 5 个**:`ag2 / cognee / llama_index / ms-graphrag / pathway`(2026-05-18 决策 + 改 type 后)。
+
+---
+
 ### 3.3 concept/*.md — 横切概念页
 
 横切概念 (Context Compaction / Tool Use 协议 / SubAgent 模式 / Memory / Self-Evolution / Safety 等):
@@ -366,8 +413,10 @@ contributed_to: [harness/hermes-agent.md, concept/context-compaction.md]
 
 | 规则 | 严重度 |
 |---|---|
-| harness/eval 页 frontmatter 缺维度 (留空) | error |
-| `safety` 维度未填 (任何 harness 页) | error |
+| harness/eval/framework 页 frontmatter 缺维度 (留空) | error |
+| `safety` 维度未填 (任何 harness 页或 `type: framework` 页) | error |
+| `type: eval-framework` 缺 8 维 (target/dataset/scorer/reproducibility/coverage/production_loop/automation/cost) | error |
+| `type: framework` 沿用 §3.1 13 维,**不强制** 8 维 eval-specific | (规则放宽,2026-05-18) |
 | `skillforge_takeaway` 为空或只有 "?" | warning |
 | `eval_loop` 和 `self_evolution` 写成相同内容 | warning(两件事,别混) |
 | 孤儿页 (无入站 wikilink) | warning |
@@ -384,3 +433,4 @@ schema 本身会演化。每次重大调整在文件底部追加:
 
 ### Changelog
 - 2026-05-15: v1 — 初始 13 维度,对齐 SkillForge 模块
+- 2026-05-18: v2 — 加 §3.2b `type: framework`(放宽 eval/*.md 强制 8 维要求);§8 lint 规则同步更新。修复 5 个 eval(ag2/cognee/llama_index/ms-graphrag/pathway)实际是 RAG/memory/multi-agent framework 而非 eval framework 的语义错配
