@@ -14,8 +14,9 @@ updated: 2026-05-16
 - [[purpose]] — 为什么有这个 wiki(双重目的:学习 + 服务 SkillForge)
 - [[schema]] — 操作规范、frontmatter 规则、写入边界、lint 规则
 - [[log]] — 调研时间线,每条带"触发问题"
-- [[overview]] — 🎯 **全局 thesis**(2026-05-16 首版)— 7 个核心学习判断 + 8 个 SkillForge 决策建议 + 6 条 wiki 维护原则,基于 5 harness + 2 eval framework + 12 concept ingest 提炼
+- [[overview]] — 🎯 **全局 thesis**(2026-05-18 第 4 版)— 10 个核心学习判断 + 8 个 SkillForge 决策 + 15 R-XXX P0/P1 + 6 条 wiki 维护原则 + 6 条元判断,基于 13 harness + 16 eval + 5 framework + 22 concept + 11 deep ingest 提炼
 - [[backlog]] — 📋 **待 ingest 排期清单**(2026-05-17 首版)— ~70 条候选 module,P0 钦点 `sandbox-isolation` + `a2a-protocol`,覆盖 coding agent / eval / benchmark / RAG / 协议 / memory 六大缺口
+- [[glossary]] — 📖 **概念对齐**(2026-05-18 v1)— 23 术语 × 7 区(agent 抽象 4 / tool 协议 2 / skill 1 / prompt+rules 2 / eval 数据 5 / eval 打分 7 / 高阶 2),高频混淆配对扩展对照(agent vs harness vs framework / dataset 四件套 / system prompt vs rules / metric vs dimension / score vs label / attribution vs label vs score / eval vs benchmark)
 
 ## Harness — Agent 运行时框架
 
