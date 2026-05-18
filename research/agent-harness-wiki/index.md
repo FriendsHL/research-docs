@@ -16,7 +16,7 @@ updated: 2026-05-16
 - [[log]] — 调研时间线,每条带"触发问题"
 - [[overview]] — 🎯 **全局 thesis**(2026-05-18 第 4 版)— 10 个核心学习判断 + 8 个 SkillForge 决策 + 15 R-XXX P0/P1 + 6 条 wiki 维护原则 + 6 条元判断,基于 13 harness + 16 eval + 5 framework + 22 concept + 11 deep ingest 提炼
 - [[backlog]] — 📋 **待 ingest 排期清单**(2026-05-17 首版)— ~70 条候选 module,P0 钦点 `sandbox-isolation` + `a2a-protocol`,覆盖 coding agent / eval / benchmark / RAG / 协议 / memory 六大缺口
-- [[glossary]] — 📖 **概念对齐**(2026-05-18 v1)— 23 术语 × 7 区(agent 抽象 4 / tool 协议 2 / skill 1 / prompt+rules 2 / eval 数据 5 / eval 打分 7 / 高阶 2),高频混淆配对扩展对照(agent vs harness vs framework / dataset 四件套 / system prompt vs rules / metric vs dimension / score vs label / attribution vs label vs score / eval vs benchmark)
+- [[glossary]] — 📖 **概念对齐**(2026-05-18 v2)— **101 术语 × 11 区**(agent 抽象 12 / tool 协议 9 / skill 6 / context 11 / memory 6 / eval 21 / multi-agent 8 / RAG 7 / safety 10 / observability 5 / self-evolution 6),每个术语 4 段格式(称呼 / 定义 / vs 相邻 / wiki 出现);7 个高频混淆扩展对照表(agent vs harness vs framework / dataset 四件套 / system prompt vs rules vs instructions / metric vs dimension / score vs label / attribution vs label vs score vs provenance / eval vs benchmark)
 
 ## Harness — Agent 运行时框架
 
